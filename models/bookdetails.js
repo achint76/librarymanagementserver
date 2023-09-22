@@ -1,7 +1,8 @@
 const sequelize = require('../db/config');
 
 const {DataTypes} = require('sequelize');
-
+const moment = require('moment');
+ 
 const BookDetails = sequelize.define('bookdetailstable', {
     id: {
         primaryKey: true,
@@ -23,13 +24,13 @@ const BookDetails = sequelize.define('bookdetailstable', {
         allowNull: false
     },
     issued_date: {
-        type: DataTypes.DATE(6),
-        defaultValue: DataTypes.NOW,
+        type: DataTypes.DATEONLY(6),
+        defaultValue:  moment().format('YYYY-MM-DD'),
         allowNull: false
     },
     submission_date: {
-        type: DataTypes.DATE(6),
-        defaultValue: DataTypes.NOW,
+        type: DataTypes.DATEONLY(6),
+        
         allowNull: false
     }
 }, {

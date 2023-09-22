@@ -9,9 +9,9 @@ const Category = require('./category');
 const Bookmanagement = require('./bookmanagement');
 
 
-sequelize.sync({force: false});
+sequelize.sync({ alter: true });
 
-module.exports = { 
+module.exports = {
     Category,
     Stock,
     Users,

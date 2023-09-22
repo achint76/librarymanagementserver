@@ -25,11 +25,11 @@ validateEmail: async function ({email}){
     if(email == undefined || email == null){
         throw new Error('Email is undefined or null');
     }
-    const existingUser = await models.User.findOne({
+    const existingUser = await models.Users.findOne({
         where: {
             email: email
         },
-        raw: true
+        //raw: true
     });
 
     if (existingUser) {

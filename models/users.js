@@ -1,7 +1,7 @@
 
 const {DataTypes} = require('sequelize');
 const sequelize = require('../db/config');
-const models = require('../models');
+const models = require('../models/index');
 const User = sequelize.define('usertable', {
     id: {
         primaryKey: true,
@@ -22,7 +22,7 @@ const User = sequelize.define('usertable', {
         allowNull: false
     },
     user_type: {
-        type: DataTypes.ENUM('user', 'admin'), // Define allowed values
+        type: DataTypes.ENUM('user', 'admin'), 
         allowNull: false,
         defaultValue: 'user', // Set the default value to 'user'
     },

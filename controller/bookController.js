@@ -1,27 +1,40 @@
 const bookService = require('../service/bookService');
 module.exports = {
-    createBook: async function(req,res){
+    createBook: async function (req, res) {
         const data = req.body;
         const book = await bookService.createBook({
             id: data.id,
             book_id: data.book_id,
             user_id: data.user_id,
-            category_id: data.category_id
+            category_id: data.category_id,
+            name: data.name
         });
-        res.json({message:'Book Created', data: book});
+        res.json({ message: 'Book Created', data: book });
     },
-    getBook: async function(req,res){
-        const books = await bookService.getBook();
-        res.json({
-            message: 'All books',
-            data: books
-        });
+    getBook: async function (req, res) {
+        
+           
+            try {
+                const page = req.query.page || 1;
+                const pageSize = req.query.pageSize || 2;
+                const searchTerm = req.query.searchTerm || '';
+                const sortBy = req.query.sortBy || 'name';
+                const sortOrder = req.query.sortOrder || 'ASC';
+                const books = await bookService.getBook({ page, pageSize, searchTerm, sortBy, sortOrder });
+                res.json({
+                    message: 'All books',
+                    data: books
+                });
+            } catch (error) {
+                console.error(error);
+                res.status(500).json({ error: 'Error fetching books' });
+            }
     },
-    deleteBook: async function(req,res){
+    deleteBook: async function (req, res) {
         const uid = req.params.id;
         const bookDelete = await bookService.deleteBook({
             id: uid
         });
-        res.json({message: 'Book deleted', data: bookDelete})
+        res.json({ message: 'Book deleted', data: bookDelete })
     }
 }

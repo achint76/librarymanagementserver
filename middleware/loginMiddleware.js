@@ -1,0 +1,29 @@
+const jwtService = require('../service/jwtService');
+const { sign, verify } = require("jsonwebtoken");
+async function userProfile(req,res, next){
+    const data = req.headers['authorization']
+    if(data){
+        verify(data,"createJwtToken",(err,authData)=>{
+            if(err){
+                res.status(401).json({
+                    message:"Unauthorized"
+                })
+                return;
+            }
+            else{
+                req.userdata=authData;
+                console.log(req.userdata);
+                next();
+            }
+        })
+    }
+    else{
+        res.status(401).json({
+            message: "You are not logged in"
+        })
+        return;
+    }
+}
+module.exports = {
+    userProfile
+}

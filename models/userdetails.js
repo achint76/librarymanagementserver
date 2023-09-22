@@ -1,6 +1,7 @@
 const sequelize = require('../db/config');
 const {DataTypes} = require('sequelize');
 
+const moment = require('moment');
 const UserDetails = sequelize.define('userdetailstable', {
     id: {
         primaryKey: true,
@@ -21,18 +22,20 @@ const UserDetails = sequelize.define('userdetailstable', {
         allowNull: false
     },
     issued_date: {
-        type: DataTypes.DATE(6),
-        defaultValue: DataTypes.NOW,
+        type: DataTypes.DATEONLY,
+        defaultValue:  moment().format('YYYY-MM-DD'),
         allowNull: false
     },
     submission_date: {
-        type: DataTypes.DATE(6),
-        defaultValue: DataTypes.NOW,
+        type: DataTypes.DATEONLY,
+        
         allowNull: false
     }
 
 },{
     timestamps:false,
-    id: false 
+    id: false ,
+    
+    
 })
 module.exports = UserDetails;

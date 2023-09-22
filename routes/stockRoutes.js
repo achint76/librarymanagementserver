@@ -6,6 +6,6 @@ const RouterStock = express.Router();
 RouterStock.post('/add-stock');
 RouterStock.get('/getstock');
 RouterStock.put('/update-stock/:id');
-RouterStock.delete('/delete-stock/:id');
+//RouterStock.delete('/delete-stock/:id');
 
 module.exports = RouterStock;
