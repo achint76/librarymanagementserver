@@ -1,4 +1,6 @@
 const userService = require('../service/userService');
+const jwtService = require('../service/jwtService');
+const sessionService = require('../service/sessionService');
 module.exports = {
     createUser: async function(req,res){
         const data = req.body;
@@ -24,5 +26,35 @@ module.exports = {
             id: uid
         });
         res.json({message: 'User deleted', data: userDelete})
+    }
+    ,
+    updateSessionlogout: async function (req,res){
+        try{
+            const jwt = req.headers["authorization"];
+            const authData = jwtService.verifyToken(jwt);
+            const sessions_id = authData.id;
+            const date = new Date();
+            const logOut = await sessionService.updateSessionlogout({
+                date: date,
+                id: sessions_id
+            })
+
+            if (logOut.numUpdatedRows > 0) {
+                res.json({
+                    message: `${authData.name} Logged out`
+                })
+            }
+            else {
+                res.json({
+                    message: `Log in to log out`
+                })
+            }
+        }  catch (error) {
+            console.log(error,"<----error");
+            res.status(500).json({
+                message: `error coming !!!!!`,
+                err: error,
+            });
+        }
     }
 }

@@ -1,11 +1,24 @@
 const { sign, verify } = require("jsonwebtoken");
-const createToken = function ({name, email}){
+const createToken = function ({name, email, user_id, id, user_type}){
     const accessToken = sign({
-        name, email
-    }, "createJwtToken")
+        name, email, user_id, id, user_type
+    }, "createJwtToken", {expiresIn: "1d"})
     return accessToken;
 };
+const verifyToken = function(data){
+    console.log(data, "<====data");
+    const authData = verify(data, "createJwtToken", (err, authData) => {
+        if (err) {
+          return err;
+        } else {
+            console.log(authData,"Verified data");  
+          return authData;
+        }
+      });
+      return authData;
+}
 
 module.exports = {
-    createToken
+    createToken,
+    verifyToken
 }

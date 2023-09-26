@@ -12,5 +12,7 @@ module.exports = {
         console.log(`User with name "${name}" not found.`);
         return null;
         }
+        else
+        return user;
     }
 }

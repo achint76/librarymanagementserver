@@ -15,7 +15,7 @@ const Inventory = sequelize.define('inventorytable', {
         allowNull: false,
         
     },
-    book_serialnumber: {
+    quantity: {
         type: DataTypes.INTEGER,
         allowNull: false
     },

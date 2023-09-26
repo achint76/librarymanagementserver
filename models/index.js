@@ -7,6 +7,7 @@ const Inventory = require('./inventory');
 const Stock = require('./stock');
 const Category = require('./category');
 const Bookmanagement = require('./bookmanagement');
+const Session = require('./sessions');
 
 
 sequelize.sync({ alter: true });
@@ -20,5 +21,6 @@ module.exports = {
     Bookdetails,
     sequelize,
     Inventory,
-    Bookmanagement
+    Bookmanagement,
+    Session
 };

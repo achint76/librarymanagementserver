@@ -5,7 +5,7 @@ module.exports = {
         const inventory = await inventoryService.createInventory({
             id: data.id,
             book_id: data.book_id,
-            book_serialnumber: data.book_serialnumber
+            quantity: data.quantity
         });
         res.json({message:'Inventory Created', data: inventory});
     },

@@ -1,9 +1,10 @@
 const jwtService = require('../service/jwtService');
 const { sign, verify } = require("jsonwebtoken");
+const sessionService = require('../service/sessionService');
 async function userProfile(req,res, next){
-    const data = req.headers['authorization']
+    const data = req.headers['authorization'];    
     if(data){
-        verify(data,"createJwtToken",(err,authData)=>{
+        verify(data,"createJwtToken", async(err,authData)=>{
             if(err){
                 res.status(401).json({
                     message:"Unauthorized"
@@ -11,13 +12,27 @@ async function userProfile(req,res, next){
                 return;
             }
             else{
-                req.userdata=authData;
-                console.log(req.userdata);
-                next();
+
+                const session = await sessionService.findSession({
+                    id: authData.id
+                  })
+                  console.log(session,"<<---- Session data");
+                  if (session.logout == null) {
+                    req.userdata = authData;
+                    console.log(req.userdata);
+                    next();
+                // console.log(req.userdata);
+               // next();
+                  }   else {
+                    return res.status(403).json({
+                      message: `log in to access data`
+                    })
+                  }
             }
         })
     }
     else{
+        
         res.status(401).json({
             message: "You are not logged in"
         })
