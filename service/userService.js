@@ -35,5 +35,7 @@ validateEmail: async function ({email}){
     if (existingUser) {
         throw new Error('Email already exists');
     }
-}
+},
+
+
 }

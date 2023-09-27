@@ -37,4 +37,6 @@ updateInventory : async function({book_id, quantity}){
         raw: true
     })
 },
+//decreasequantity: async function()
+
 }
