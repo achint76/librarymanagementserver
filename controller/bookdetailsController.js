@@ -1,5 +1,5 @@
 const bookdetailService = require('../service/bookdetailService');
-
+const inventoryService = require('../service/inventoryService');
 module.exports = {
     createBookdetails: async function (req, res) {
         const data = req.body;
@@ -33,7 +33,8 @@ module.exports = {
         const date = new Date();
         // Pass user information to the service
         const updateoptions = {};
-        if (req.query.approved == 'true') {
+        if (req.query.approved == 'true') { 
+            //calll inventory for decrease the quantity
             updateoptions.approved = true
             updateoptions.issued_date = date
         }
@@ -45,8 +46,18 @@ module.exports = {
                 bookdetailId: bookdetailId
                 , updateoptions: updateoptions
             });
+            console.log(result, "RESULT OF BOOK DETAILS");
              if(result.success) {
-            res.json({ message: 'Book issue approved.' });
+                const inventoryResult = await inventoryService.decreasequantity(result.data.book_id);
+                console.log(inventoryResult, "inventory result is:");
+                //console.log(result.message);
+                if(inventoryResult > 0)
+                    res.json({ message: 'Book issue approved.' });
+                else if(inventoryResult == 0)
+                res.json({message: 'book out of stock'})
+            else {
+                res.status(500).json({ message: 'Error updating inventory.' });
+            }
         } else {
             res.status(400).json({ message: result.message });
         }

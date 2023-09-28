@@ -26,7 +26,7 @@ updateInventory : async function({book_id, quantity}){
         quantity: models.sequelize.literal(`quantity+${quantity}`)
     }, {
         where: {
-            book_id:book_id
+            book_id: book_id
         }
     })
 
@@ -38,5 +38,21 @@ updateInventory : async function({book_id, quantity}){
     })
 },
 //decreasequantity: async function()
+decreasequantity: async function(book_id){
+    //console.log(userdata);
+    const decreasequantity = await models.Inventory.update({
+        quantity: models.sequelize.literal(`quantity - 1`)
+    },
+    {
+        where: {
+           
+                 book_id: book_id 
+               
+        
+        },
+
+    })
+    return decreasequantity;
+}
 
 }

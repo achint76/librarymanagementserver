@@ -25,7 +25,7 @@ const BookDetails = sequelize.define('bookdetailstable', {
     },
     issued_date: {
         type: DataTypes.DATEONLY(6),
-        //defaultValue:  moment().format('YYYY-MM-DD'),
+        defaultValue:  moment().format('YYYY-MM-DD'),
         allowNull: true
     },
     submission_date: {

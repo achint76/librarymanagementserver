@@ -15,7 +15,7 @@ module.exports = {
     getBookdetails: async function () {
         return await models.Bookdetails.findAll();
     },
-    deleteUserdetails: async function ({ id }) {
+    deleteBookdetails: async function ({ id }) {
         //console.log(id);
         return await models.Bookdetails.destroy({
             where: {
@@ -47,11 +47,13 @@ module.exports = {
                 }
             })
             if(numUpdatedRows > 0){
+                // console.log("")
                 const bookDetail = await models.Bookdetails.findOne({
                     where : {
                         id : bookdetailId
                     }
                 })
+                console.log(bookDetail,"this is bookdetail");
                 return {success: true, message: 'Book issue approved.', data:bookDetail};
             } else {
                 return {success: false, message: 'Book issue already approved.', data: "book already updated"};

@@ -2,6 +2,7 @@ const express = require('express');
 const userdetailService = require('../service/userdetailService');
 const userdetailsController = require('../controller/bookdetailsController');
 const bookdetailsController = require('../controller/bookdetailsController');
+const inventoryController = require('../controller/inventoryController')
 const loginMiddleware = require('../middleware/loginMiddleware');
 const RouterBookdetails = express.Router();
 // const userController = require('../controller/userController');
