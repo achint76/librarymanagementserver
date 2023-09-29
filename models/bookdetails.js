@@ -36,6 +36,17 @@ const BookDetails = sequelize.define('bookdetailstable', {
     approved: {
         type: DataTypes.BOOLEAN,
         //defaultValue: false
+    },
+    // returnapproved: {
+    //     type: DataTypes.BOOLEAN,
+    //     defaultValue: false,
+    //     allowNull: false
+        
+    // },
+    userreturndate: {
+        type: DataTypes.DATEONLY(6),
+        //defaultValue: moment().format('YYYY-MM-DD'),
+        allowNull: true
     }
 }, {
     timestamps:false,

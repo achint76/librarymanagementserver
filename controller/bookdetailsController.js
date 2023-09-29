@@ -43,8 +43,9 @@ module.exports = {
         }
         if (req.userdata.user_type == 'admin') {
             const result = await bookdetailService.userbookissue({
-                bookdetailId: bookdetailId
-                , updateoptions: updateoptions
+                bookdetailId: bookdetailId,
+                //userreturndate: data.userreturndate,
+                 updateoptions: updateoptions
             });
             //console.log(result, "RESULT OF BOOK DETAILS");
             console.log(result.data.book_id,"result of result_data_bookid");
@@ -69,6 +70,107 @@ module.exports = {
         }
 
        
+    },
+
+    userbookreturn: async function(req,res){
+        const bookdetailId = req.query.id;
+        const data = req.body;
+        
+            const updateoptions = {};
+            // if(req.query.returnapproved == 'true'){
+            //     updateoptions.returnapproved = true;
+            //     updateoptions.userreturndate = data.userreturndate;
+            // }
+            // else if(req.query.returnapproved == 'false'){
+            //     updateoptions.returnapproved = false;
+            //    // updateoptions.userreturndate = date;
+            // }
+            // else if(req.userdata.user_type == 'admin'){
+            //     const result = await bookdetailService.userbookreturn({
+            //         bookdetailId: bookdetailId,
+            //         userreturndate: data.userreturndate,
+            //         updateoptions: updateoptions
+            //     });
+            //     if(result.success){
+                // const result = await bookdetailService.userbookreturn({
+
+                // })
+                    const inventoryResult = await inventoryService.updateInventory(result.data.book_id, 1);
+                    console.log(inventoryResult,"Result of inventory Result");
+                    if(inventoryResult > 0)
+                    res.json({ message: 'Book return approved.' });
+                else if(inventoryResult == 0)
+                res.json({message: 'book return not accepted'})
+            else {
+                res.status(500).json({ message: 'Error updating inventory.' });
+            }
+              //  }
+                // else {
+                //     res.status(400).json({ message: result.message });
+                // }
+          //  }
+            // else {
+            //     res.status(403).json({
+            //         message: `Only admin can update status`
+            //     })
+            // }
+
+        
+    },
+    // bookreturndate: async function(req,res){
+    //     const bookdetailId = req.query.id;
+    //     const data = req.body;
+    //     const returndate = await bookdetailService.bookreturndate({
+    //         bookdetailId: bookdetailId,
+    //         userreturndate: data.userreturndate
+    //     })
+    //     console.log(returndate,"This is returndate---->>>>");
+    //     if(returndate){
+    //         const inventoryResult = await inventoryService.updateInventory(bookdetailId, 1);
+    //         console.log(inventoryResult,"Result of inventory Result");
+    //         if(inventoryResult > 0)
+    //         res.json({ message: 'Book retured.' });
+    //     else if(inventoryResult == 0)
+    //     res.json({message: 'book return not accepted'})
+    // else {
+    //     res.status(500).json({ message: 'Error updating inventory.' });
+    // }
+    //     }
+    //     res.json({message: 'return date updated', data: returndate})
+    // }
+    clearReturnDate: async function (req, res) {
+        const bookdetailId = req.query.id;
+
+        const result = await bookdetailService.bookreturndate({
+            bookdetailId: bookdetailId
+        });
+
+        if (result.success) {
+            res.json({ message: 'Return date cleared.' });
+        } else {
+            res.status(404).json({ message: 'Book detail not found or error clearing return date.' });
+        }
+    },
+
+    updateReturnDate: async function (req, res) {
+        const bookdetailId = req.query.id;
+        const userreturndate = req.body.userreturndate;
+
+        const result = await bookdetailService.updateReturnDate({
+            bookdetailId: bookdetailId,
+            userreturndate: userreturndate
+        });
+
+        if (result.success) {
+            const inventoryResult = await inventoryService.updateInventory(bookdetailId,1);
+            console.log(inventoryResult,"Result of inventory Result");
+            if(inventoryResult > 0)
+            res.json({ message: 'Return date updated.' });
+        else if(inventoryResult == 0)
+        res.json({message: 'book return not approved'})
+        } else {
+            res.status(404).json({ message: result.message });
+        }
     }
 
 }

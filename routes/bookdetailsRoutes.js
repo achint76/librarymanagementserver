@@ -13,4 +13,9 @@ RouterBookdetails.get('/getbookdetails', bookdetailsController.getBookdetails);
 // RouterBookdetails.put('/update-bookdetails/:id');
 RouterBookdetails.delete('/delete-bookdetails/:id', bookdetailsController.deleteBookdetails);
 RouterBookdetails.put('/approved', loginMiddleware.userProfile, bookdetailsController.userbookissue);
+RouterBookdetails.put('/returnbookapprroved', loginMiddleware.userProfile, bookdetailsController.userbookreturn);
+
+RouterBookdetails.post('/clear-return-date',loginMiddleware.userProfile, bookdetailsController.clearReturnDate);
+
+RouterBookdetails.put('/update-return-date', loginMiddleware.userProfile, bookdetailsController.updateReturnDate)
 module.exports = RouterBookdetails;

@@ -20,22 +20,23 @@ getInventory: async function(){
 //     });
 // },
 // 
-updateInventory : async function({book_id, quantity}){
-    await models.Inventory.update({
+updateInventory : async function(book_id, quantity){
+    console.log(book_id,"book_id is---0--");
+    const [numupdatedrows] = await models.Inventory.update({
         //price: models.sequelize.literal(`price + ${price}`),
-        quantity: models.sequelize.literal(`quantity+${quantity}`)
+        quantity: models.sequelize.literal(quantity+`${quantity}`)
     }, {
         where: {
             book_id: book_id
         }
-    })
-
-    return models.Inventory.findOne({
-        where:{
-            book_id: book_id
-        },
-        raw: true
-    })
+    });    
+    return numupdatedrows;
+    // return models.Inventory.findOne({
+    //     where:{
+    //         book_id: book_id
+    //     },
+    //     raw: true
+    // })
 },
 //decreasequantity: async function()
 // decreasequantity: async function(book_id){
