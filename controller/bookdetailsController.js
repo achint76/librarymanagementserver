@@ -46,7 +46,8 @@ module.exports = {
                 bookdetailId: bookdetailId
                 , updateoptions: updateoptions
             });
-            console.log(result, "RESULT OF BOOK DETAILS");
+            //console.log(result, "RESULT OF BOOK DETAILS");
+            console.log(result.data.book_id,"result of result_data_bookid");
              if(result.success) {
                 const inventoryResult = await inventoryService.decreasequantity(result.data.book_id);
                 console.log(inventoryResult, "inventory result is:");

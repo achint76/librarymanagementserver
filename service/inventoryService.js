@@ -38,21 +38,37 @@ updateInventory : async function({book_id, quantity}){
     })
 },
 //decreasequantity: async function()
-decreasequantity: async function(book_id){
-    //console.log(userdata);
-    const decreasequantity = await models.Inventory.update({
-        quantity: models.sequelize.literal(`quantity - 1`)
-    },
-    {
-        where: {
+// decreasequantity: async function(book_id){
+//     //console.log(userdata);
+//     const decreasequantity = await models.Inventory.update({
+//         quantity: models.sequelize.literal(`quantity - 1`)
+//     },
+//     {
+//         where: {
            
-                 book_id: book_id 
+//                  book_id: book_id 
                
         
-        },
+//         },
 
-    })
-    return decreasequantity;
+//     })
+//     return decreasequantity;
+// }
+decreasequantity: async function ( book_id ) {
+    // Decrease quantity by 1
+    const [numUpdatedRows] = await models.Inventory.update(
+        {
+            quantity: models.sequelize.literal('quantity - 1')
+        },
+        {
+            where: {
+                book_id: book_id
+            }
+        }
+    );
+
+    return numUpdatedRows;
 }
+
 
 }
