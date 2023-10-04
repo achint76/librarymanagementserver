@@ -9,6 +9,14 @@ const Category = require('./category');
 const Bookmanagement = require('./bookmanagement');
 const Session = require('./sessions');
 
+Category.hasMany(Books, {
+    foreignKey: 'category_id',
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE"
+});
+Books.belongsTo(Category,{
+    foreignKey: 'category_id',
+});
 
 sequelize.sync({ alter: true });
 

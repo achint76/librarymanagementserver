@@ -20,6 +20,10 @@ module.exports = {
             }
             const order = sortBy ? [[sortBy, sortOrder || 'ASC']] : [];
             const books = await models.Books.findAndCountAll({
+                include: {
+                    model: models.Category,
+                    attributes: ['category_name','id']
+                }, 
                 where: where,
                 order: order,
                 limit: parseInt(limit), // Ensure limit is an integer

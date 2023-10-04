@@ -2,7 +2,7 @@ const bookService = require('../service/bookService');
 module.exports = {
     createBook: async function (req, res) {
         // console.log(req.user.user_type);
-        if(req.userdata.user_type == admin){
+        if(req.userdata.user_type == "admin"){
         const data = req.body;
         const book = await bookService.createBook({
             id: data.id,

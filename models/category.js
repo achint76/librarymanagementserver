@@ -21,10 +21,10 @@ const Category = sequelize.define('categorytable', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    bookdetails_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    }
+    // book_id: {
+    //     type: DataTypes.INTEGER,
+    //     allowNull: false
+    // }
     // date: {
     //     type: DataTypes.DATE(6),
     //     defaultValue: DataTypes.NOW,

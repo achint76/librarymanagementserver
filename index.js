@@ -10,6 +10,7 @@ const RouterSignup = require('./routes/signupRoutes');
 const RouterLogin = require('./routes/loginRoutes');
 const RouterProfile = require('./routes/userprofileRoutes');
 const RouterLogout = require('./routes/userprofileRoutes');
+const RouterCategory = require('./routes/categoryRoutes');
 app.use(express.json());
 
 app.get('/', (req,res)=> {
@@ -26,6 +27,7 @@ app.use('/user', RouterSignup);
 app.use('/user', RouterLogin);
 app.use('/user', RouterProfile);
 app.use('/user', RouterLogout);
+app.use('/category', RouterCategory);
 app.listen(3003, () => {
     console.log(`The server is running on 3003`);   
 }); 
