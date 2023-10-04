@@ -1,7 +1,7 @@
 const models = require('../models');
-
+const inventoryService = require('../service/inventoryService');
 module.exports = {
-    createBookdetails: async function ({ user_id, book_id, category_id, issued_date, submission_date, approved }) {
+    createBookdetails: async function ({ user_id, book_id, category_id, issued_date, submission_date, quantity, approved }) {
         return await models.Bookdetails.create({
             //id: id,
             book_id: book_id,
@@ -9,6 +9,7 @@ module.exports = {
             category_id: category_id,
             issued_date: issued_date,
             submission_date: submission_date,
+            quantity: quantity,
             approved: approved
         });
     },
@@ -41,6 +42,19 @@ module.exports = {
     // },
     userbookissue: async function ({ bookdetailId, updateoptions }) {
         try {
+            const bookdetail = await models.Bookdetails.findOne({
+                where: {
+                    id: bookdetailId
+                }
+            });
+            if (!bookdetail) {
+                return { success: false, message: 'Book detail not found.' };
+            }
+
+            const inventoryQuantity = await inventoryService.getInventoryQuantity(bookdetail.book_id);
+            if (bookdetail.quantity > inventoryQuantity) {
+                return { success: false, message: 'Book quantity exceeds inventory quantity.' };
+            }
             const [numUpdatedRows] = await models.Bookdetails.update(updateoptions,{
                 where : {
                     id : bookdetailId
@@ -129,6 +143,7 @@ bookreturndate: async function ({ bookdetailId }) {
 
 // Update userreturndate with a specific return date
 updateReturnDate: async function ({ bookdetailId, userreturndate }) {
+    // console.log(userreturndate, "<----------------userreturndate");
     try {
         const [numUpdatedRows] = await models.Bookdetails.update(
             {
@@ -140,18 +155,37 @@ updateReturnDate: async function ({ bookdetailId, userreturndate }) {
                 }
             }
         );
-
+        // console.log(numUpdatedRows,"NUMUPDATEDROWS")
         if (numUpdatedRows > 0) {
-            return { success: true, message: 'Return date updated.' };
+            const bookdetail = await models.Bookdetails.findOne({
+                where: {
+                    id: bookdetailId
+                }
+            })
+            return { success: true, message: 'Return date updated.', data: bookdetail };
         } else {
-            return { success: false, message: 'Book detail not found.' };
+            return { success: false, message: 'Book detail not found.', data: null };
         }
     } catch (error) {
         console.error(error);
         return { success: false, message: 'Error updating return date.' };
     }
-}
+},
 
+
+getBookDetailsById: async function (bookdetailId) {
+    try {
+        const bookDetail = await models.Bookdetails.findOne({
+            where: {
+                id: bookdetailId
+            }
+        });
+        return bookDetail;
+    } catch (error) {
+        console.error(error);
+        return null; // Return null or handle the error as needed
+    }
+}
 
     
 

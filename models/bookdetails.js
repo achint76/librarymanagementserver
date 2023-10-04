@@ -23,6 +23,10 @@ const BookDetails = sequelize.define('bookdetailstable', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     issued_date: {
         type: DataTypes.DATEONLY(6),
         defaultValue:  moment().format('YYYY-MM-DD'),
@@ -35,7 +39,7 @@ const BookDetails = sequelize.define('bookdetailstable', {
     },
     approved: {
         type: DataTypes.BOOLEAN,
-        //defaultValue: false
+        defaultValue: false
     },
     // returnapproved: {
     //     type: DataTypes.BOOLEAN,

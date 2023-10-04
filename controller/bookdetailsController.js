@@ -1,5 +1,7 @@
 const bookdetailService = require('../service/bookdetailService');
 const inventoryService = require('../service/inventoryService');
+const models = require('../models');
+
 module.exports = {
     createBookdetails: async function (req, res) {
         const data = req.body;
@@ -10,7 +12,8 @@ module.exports = {
             category_id: data.category_id,
             // issued_date: data.issued_date,
             submission_date: data.submission_date,
-            approved: false
+           // approved: false
+           quantity: data.quantity
         });
         res.json({ message: 'bookdetail created', data: bookdetail });
     },
@@ -30,7 +33,9 @@ module.exports = {
     },
     userbookissue: async function (req, res) {
         const bookdetailId = req.query.id; // Assuming you have the bookdetail ID in the URL
+        const data = req.body;
         const date = new Date();
+        
         // Pass user information to the service
         const updateoptions = {};
         if (req.query.approved == 'true') { 
@@ -45,12 +50,16 @@ module.exports = {
             const result = await bookdetailService.userbookissue({
                 bookdetailId: bookdetailId,
                 //userreturndate: data.userreturndate,
-                 updateoptions: updateoptions
+                updateoptions: updateoptions
             });
-            //console.log(result, "RESULT OF BOOK DETAILS");
+            console.log(result, "RESULT OF BOOK DETAILS");
             console.log(result.data.book_id,"result of result_data_bookid");
              if(result.success) {
-                const inventoryResult = await inventoryService.decreasequantity(result.data.book_id);
+                const bookDetail = await bookdetailService.getBookDetailsById(bookdetailId); // Retrieve book details
+        if (!bookDetail) {
+            return res.status(404).json({ message: 'Book detail not found.' });
+        }
+                const inventoryResult = await inventoryService.decreasequantity(bookDetail.book_id, bookDetail.quantity);
                 console.log(inventoryResult, "inventory result is:");
                 //console.log(result.message);
                 if(inventoryResult > 0)
@@ -95,6 +104,10 @@ module.exports = {
                 // const result = await bookdetailService.userbookreturn({
 
                 // })
+                const bookDetail = await bookdetailService.getBookDetailsById(bookdetailId); // Retrieve book details
+                if (!bookDetail) {
+                    return res.status(404).json({ message: 'Book detail not found.' });
+                }
                     const inventoryResult = await inventoryService.updateInventory(result.data.book_id, 1);
                     console.log(inventoryResult,"Result of inventory Result");
                     if(inventoryResult > 0)
@@ -152,18 +165,31 @@ module.exports = {
         }
     },
 
+    
     updateReturnDate: async function (req, res) {
         const bookdetailId = req.query.id;
-        const userreturndate = req.body.userreturndate;
-
+        //const userreturndate = req.body.userreturndate;
+        const data = req.body;
+        const bookdetail = await models.Bookdetails.findOne({
+            where: {
+                id: bookdetailId
+            }
+        });
+        
+        if (bookdetail) {
+            const book_id = bookdetail.book_id;
+        // console.log(data,"SOME DATA:::::");
         const result = await bookdetailService.updateReturnDate({
             bookdetailId: bookdetailId,
-            userreturndate: userreturndate
+            userreturndate: data.userreturndate
         });
-
+        //  console.log(result,",-----RESULT IS THIS%%%%%");
+        //  console.log(bookdetailId,"BOOKDETAILIDIS@@@");
         if (result.success) {
-            const inventoryResult = await inventoryService.updateInventory(bookdetailId,1);
-            console.log(inventoryResult,"Result of inventory Result");
+            console.log(book_id,"BOOK_ID is??????");
+            const inventoryResult = await inventoryService.updateInventory(book_id,data.quantity);
+            console.log(inventoryResult,"<-------------Result of inventory Result");
+
             if(inventoryResult > 0)
             res.json({ message: 'Return date updated.' });
         else if(inventoryResult == 0)
@@ -171,6 +197,7 @@ module.exports = {
         } else {
             res.status(404).json({ message: result.message });
         }
-    }
+        }
 
+    }
 }
