@@ -12,11 +12,20 @@ const Session = require('./sessions');
 Category.hasMany(Books, {
     foreignKey: 'category_id',
     onDelete: "CASCADE",
-    onUpdate: "CASCADE"
+    onUpdate: "CASCADE", as: "category"
 });
 Books.belongsTo(Category,{
-    foreignKey: 'category_id',
+    foreignKey: 'category_id', as: "category"
 });
+
+Books.hasMany(Inventory, {
+    foreignKey: 'book_id',
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE"
+});
+Inventory.belongsTo(Books, {
+    foreignKey: 'book_id'
+})
 
 sequelize.sync({ alter: true });
 

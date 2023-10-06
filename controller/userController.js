@@ -1,6 +1,8 @@
 const userService = require('../service/userService');
 const jwtService = require('../service/jwtService');
 const sessionService = require('../service/sessionService');
+const models = require('../models');
+const {Op} = require('sequelize')
 module.exports = {
     createUser: async function(req,res){
         const data = req.body;
@@ -34,6 +36,19 @@ module.exports = {
             const authData = jwtService.verifyToken(jwt);
             const sessions_id = authData.id;
             const date = new Date();
+            const session = await sessionService.findSession({id: sessions_id});
+            console.log(sessions_id,"SesssssionsId^^^^^^^^");
+            console.log(session,"Session Is this!!!!!!!!");
+            const sessions = await models.Session.findAll({
+                where: {
+                    [Op.and]: [
+                        { logout: null }, // Check if logout is null
+                        { expiry: { [Op.gt]: date } } // Check if expiry is greater than the current date
+                    ]
+                }
+            });
+            console.log(sessions,"SESSIONS AFTER CHECKING LOGOUT AND EXPIRY");
+            if(sessions){
             const logOut = await sessionService.updateSessionlogout({
                 date: date,
                 id: sessions_id
@@ -49,12 +64,30 @@ module.exports = {
                     message: `Log in to log out`
                 })
             }
-        }  catch (error) {
+        }
+        else{
+             console.log("sessions not found!!!");
+        } } catch (error) {
             console.log(error,"<----error");
             res.status(500).json({
                 message: `error coming !!!!!`,
                 err: error,
             });
         }
-    }
+    
+    },
+
+    // sessionExpire: async function(req,res){
+    //     try{
+    //        const jwt = req.headers["authorization"];
+    //        const authData = jwtService.verifyToken(jwt);
+    //        const session_id = authData.id;
+    //        const date = new Date();
+
+
+    //     }catch(error){
+        
+    //     }
+
+    // }
 }

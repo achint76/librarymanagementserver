@@ -22,7 +22,8 @@ module.exports = {
             const books = await models.Books.findAndCountAll({
                 include: {
                     model: models.Category,
-                    attributes: ['category_name','id']
+                    attributes: ['category_name','id'],
+                    as: "category"
                 }, 
                 where: where,
                 order: order,

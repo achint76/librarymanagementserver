@@ -84,7 +84,7 @@ module.exports = {
     userbookreturn: async function(req,res){
         const bookdetailId = req.query.id;
         const data = req.body;
-        
+        console.log(data.quantity,"DATA.QUANTITY ++++>")
             const updateoptions = {};
             // if(req.query.returnapproved == 'true'){
             //     updateoptions.returnapproved = true;
@@ -175,7 +175,9 @@ module.exports = {
                 id: bookdetailId
             }
         });
-        
+        if(data.quantity > bookdetail.quantity)
+        res.status(400).json("Quantity cannot be grerater than bookdetail.quantity, please check!!!");
+    else{
         if (bookdetail) {
             const book_id = bookdetail.book_id;
         // console.log(data,"SOME DATA:::::");
@@ -198,6 +200,7 @@ module.exports = {
             res.status(404).json({ message: result.message });
         }
         }
+    }
 
     }
 }
